@@ -248,6 +248,7 @@ navigator.mozL10n.once(function wifiSettings() {
      * A Wi-Fi list item has the following HTML structure:
      *   <li>
      *     <aside class="pack-end wifi-icon level-[?] [secured]"></aside>
+     *     <small> Ad-hoc mode, if set </small>
      *     <small> Network Security </small>
      *     <a> Network SSID </a>
      *   </li>
@@ -274,10 +275,22 @@ navigator.mozL10n.once(function wifiSettings() {
       localize(small, 'securityOpen');
     }
 
+    // network mode
+    var mode;
+    if (network.mode === 1) {
+      mode = document.createElement('small');
+      localize(mode, 'modeAdhoc');
+    } else {
+      mode = null;
+    }
+
     // create list item
     var li = document.createElement('li');
     li.appendChild(icon);
     li.appendChild(small);
+    if (mode) {
+      li.appendChild(mode);
+    }
     li.appendChild(ssid);
 
     // Show connection status

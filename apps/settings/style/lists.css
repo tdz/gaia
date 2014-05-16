@@ -105,6 +105,19 @@ ul li > small, ul li > label > small {
   pointer-events: none;
 }
 
+/* second subline (for Wifi Adhoc mode) */
+ul li > small + small, ul li > label > small + small {
+  position: absolute;
+  left: 50%;
+  right: 1.5rem;
+  top: 50%;
+  padding-top: 0.4rem;
+  font-size: 1.4rem;
+  color: #505859;
+  /* click/tap events should be caught by the <a> element below the <small> */
+  pointer-events: none;
+}
+
 ul li > label {
   font-size: 1.9rem;
   line-height: 1.9rem;
