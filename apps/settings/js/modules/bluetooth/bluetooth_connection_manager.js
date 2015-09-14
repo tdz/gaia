@@ -196,7 +196,7 @@ define(function(require) {
       (connectedDevicesByProfile) => {
         this._constructDeviceItemsMap(connectedDevicesByProfile);
       }, (reason) => {
-        Debug('_initConnectedDevicesInfo(): rejected in ' + 
+        Debug('_initConnectedDevicesInfo(): rejected in ' +
               '_getConnectedDevicesFromPlatform');
         return Promise.reject(reason);
       });
@@ -211,14 +211,14 @@ define(function(require) {
      */
     _constructDeviceItemsMap:
     function btcm__constructDeviceItemsMap(connectedDevices) {
-      Debug('_constructDeviceItemsMap(): connectedDevices = ' + 
+      Debug('_constructDeviceItemsMap(): connectedDevices = ' +
             JSON.stringify(connectedDevices));
       if (!connectedDevices) {
         // Return empty object while there is no any connected devices.
         Debug('_constructDeviceItemsMap(): early return with empty object');
         return;
       }
-      
+
       Object.keys(this.Profiles).map((profileID) => {
         connectedDevices[profileID].forEach((connectedDevice) => {
           var connectionDeviceInfo = {
@@ -227,7 +227,7 @@ define(function(require) {
             profileID: profileID,
             device: connectedDevice
           };
-          Debug('_constructDeviceItemsMap(): connectionDeviceInfo = ' + 
+          Debug('_constructDeviceItemsMap(): connectionDeviceInfo = ' +
                 JSON.stringify(connectionDeviceInfo));
           this._initConnectedDevicesCache(connectionDeviceInfo);
         });
@@ -246,9 +246,9 @@ define(function(require) {
      * @param {Object} options.profileID - profile ID of the connection type
      * @param {Object} options.device - connect device, Bluetooth Object
      */
-    _initConnectedDevicesCache: 
+    _initConnectedDevicesCache:
     function btcm__initConnectedDevicesCache(options) {
-      Debug('_initConnectedDevicesCache(): options = ' + 
+      Debug('_initConnectedDevicesCache(): options = ' +
             JSON.stringify(options));
       // hash by device address
       var info = this._connectedDevicesInfo[options.address];
@@ -261,7 +261,7 @@ define(function(require) {
         // Otherwise, given null in this property.
         var connectedDevice = (options.device) ? options.device : null;
         info = {
-          'device': connectedDevice, 
+          'device': connectedDevice,
           'connectedProfiles': {}
         };
         info.connectedProfiles[options.profileID] = options.connected;
@@ -269,7 +269,7 @@ define(function(require) {
       // Save the device/profile in map.
       this._connectedDevicesInfo[options.address] = info;
 
-      // If there is no profile connected, 
+      // If there is no profile connected,
       // remove the device item from cache since it is already disconnected.
       var dataToCheckConnectedProfile = {
         address: options.address,
@@ -279,7 +279,7 @@ define(function(require) {
         delete this._connectedDevicesInfo[options.address];
       }
       // Return the latest cache which is just updated here.
-      Debug('_initConnectedDevicesCache(): this._connectedDevicesInfo = ' + 
+      Debug('_initConnectedDevicesCache(): this._connectedDevicesInfo = ' +
             JSON.stringify(this._connectedDevicesInfo));
       return this._connectedDevicesInfo;
     },
@@ -295,14 +295,14 @@ define(function(require) {
      * @param {Object} options.profileID - profile ID of the connection type
      * @param {Object} options.device - connect device, Bluetooth Object
      */
-    _updateConnectedDevices: 
+    _updateConnectedDevices:
     function btcm__updateConnectedDevices(options) {
       return this.getConnectedDevices().then((connectedDevicesInfo) => {
-        Debug('_updateConnectedDevices(): connectedDevicesInfo = ' + 
+        Debug('_updateConnectedDevices(): connectedDevicesInfo = ' +
               JSON.stringify(connectedDevicesInfo));
 
         // hash by device address
-        var info = 
+        var info =
           (connectedDevicesInfo) ? connectedDevicesInfo[options.address] : null;
         if (info) {
           // Already have profiles, update it for other profile.
@@ -313,7 +313,7 @@ define(function(require) {
           // Otherwise, given null in this property.
           var connectedDevice = (options.device) ? options.device : null;
           info = {
-            'device': connectedDevice, 
+            'device': connectedDevice,
             'connectedProfiles': {}
           };
           info.connectedProfiles[options.profileID] = options.connected;
@@ -321,7 +321,7 @@ define(function(require) {
         // Save the device/profile in map.
         this._connectedDevicesInfo[options.address] = info;
 
-        // If there is no profile connected, 
+        // If there is no profile connected,
         // remove the device item from cache since it is already disconnected.
         var dataToCheckConnectedProfile = {
           address: options.address,
@@ -331,7 +331,7 @@ define(function(require) {
           delete this._connectedDevicesInfo[options.address];
         }
         // Return the latest cache which is just updated here.
-        Debug('_updateConnectedDevices(): this._connectedDevicesInfo = ' + 
+        Debug('_updateConnectedDevices(): this._connectedDevicesInfo = ' +
               JSON.stringify(this._connectedDevicesInfo));
         return Promise.resolve(this._connectedDevicesInfo);
       }, () => {
@@ -349,7 +349,7 @@ define(function(require) {
     _resetConnectionInfo: function btcm__resetConnectionInfo() {
       // Reset connection status.
       this.connectingAddress = null;
-      // Clean up the instance to get connected devices 
+      // Clean up the instance to get connected devices
       // while new adapter is ready.
       this._getConnectedDevicesPromise = null;
     },
@@ -369,7 +369,7 @@ define(function(require) {
      */
     _watchDefaultAdapterOnattributechanged:
     function btcm__watchDefaultAdapterOnattributechanged(adapter) {
-      adapter.addEventListener('attributechanged', 
+      adapter.addEventListener('attributechanged',
         this._onAdapterAttributeChanged.bind(this, adapter));
     },
 
@@ -383,7 +383,7 @@ define(function(require) {
      */
     _unwatchDefaultAdapterOnattributechanged:
     function btcm__unwatchDefaultAdapterOnattributechanged(adapter) {
-      adapter.removeEventListener('attributechanged', 
+      adapter.removeEventListener('attributechanged',
         this._onAdapterAttributeChanged);
     },
 
@@ -429,18 +429,18 @@ define(function(require) {
      * @memberOf BluetoothConnectionManager
      * @param {BluetoothAdapter} adapter
      */
-    _watchProfilesStatuschanged: 
+    _watchProfilesStatuschanged:
     function btcm__watchProfilesStatuschanged(adapter) {
       var eventName;
       for (var profileID in this.Profiles) {
         eventName = 'on' + profileID + 'statuschanged';
-        adapter[eventName] = 
+        adapter[eventName] =
           this._onProfileStatuschangeHandler.bind(this, profileID);
       }
     },
 
     /**
-     * Unwatch every of profile events('onhfpstatuschanged', 
+     * Unwatch every of profile events('onhfpstatuschanged',
      * 'ona2dpstatuschanged') from default adapter since adapter is removed.
      *
      * @access private
@@ -457,7 +457,7 @@ define(function(require) {
     },
 
     /**
-     * 'onhfpstatuschanged', 'ona2dpstatuschanged' events handler from 
+     * 'onhfpstatuschanged', 'ona2dpstatuschanged' events handler from
      * default adapter for updating device connected status.
      *
      * @access private
@@ -465,9 +465,9 @@ define(function(require) {
      * @param {String} profileID
      * @param {event} evt
      */
-    _onProfileStatuschangeHandler: 
+    _onProfileStatuschangeHandler:
     function btcm__onProfileStatuschangeHandler(profileID, evt) {
-      Debug('_onProfileStatuschangeHandler(): profileID = ' + profileID + 
+      Debug('_onProfileStatuschangeHandler(): profileID = ' + profileID +
             ', evt.address = ' + evt.address + ', evt.status = ' + evt.status);
       var options = {
         address: evt.address,
@@ -511,7 +511,7 @@ define(function(require) {
             var event = {
               type: 'connecting',
               detail: {
-                address: restoreDevice.address  
+                address: restoreDevice.address
               }
             };
             this._emitEvent(event);
@@ -520,13 +520,13 @@ define(function(require) {
             }, (reason) => {
               Debug('_restoreConnection(): restore connection failed, ' +
                     'reason = ' + reason);
-              // No available profiles are connected. Reset connecting address. 
+              // No available profiles are connected. Reset connecting address.
               this.connectingAddress = null;
               // Then, fire 'disconnected' event.
               event = {
                 type: 'disconnected',
                 detail: {
-                  address: restoreDevice.address  
+                  address: restoreDevice.address
                 }
               };
               this._emitEvent(event);
@@ -537,7 +537,7 @@ define(function(require) {
     },
 
     /**
-     * Record connected device so if Bluetooth is turned off and then on 
+     * Record connected device so if Bluetooth is turned off and then on
      * we can restore the connection.
      *
      * @access private
@@ -551,7 +551,7 @@ define(function(require) {
         // we can restore the connection
         AsyncStorage.setItem('device.connected', address);
         Debug('_recordConnection(): set item');
-      } else if ((action === 'remove') && 
+      } else if ((action === 'remove') &&
                  (this._defaultAdapter.state === 'enabled')) {
         // Clean up the connected device from async storage
         // which is recorded before.
@@ -573,22 +573,22 @@ define(function(require) {
      * @param {Object} options.profileID - profile ID of the connection type
      */
     _updateConnectionStatus: function btcm___updateConnectionStatus(options) {
-      Debug('_updateConnectionStatus(): address = ' + options.address + 
+      Debug('_updateConnectionStatus(): address = ' + options.address +
                                        ', connected = ' + options.connected +
                                        ', profileID = ' + options.profileID);
       this.connectingAddress = null;
-      
+
       // Update the profile in the cache of connected device info.
       this._updateConnectedDevices(options).then((connectedDevicesInfo) => {
-        Debug('_updateConnectionStatus(): _updateConnectedDevices() ' + 
-              'resolved with connectedDevicesInfo = ' + 
+        Debug('_updateConnectionStatus(): _updateConnectedDevices() ' +
+              'resolved with connectedDevicesInfo = ' +
               JSON.stringify(connectedDevicesInfo));
         // Prepare latest data to check connected profile.
         var dataToCheckConnectedProfile = {
           address: options.address,
           connectedDevices: connectedDevicesInfo
         };
-        // Fire 'connected'/'disconnected' event according to 
+        // Fire 'connected'/'disconnected' event according to
         // the connection profile. Then, record connection.
         var event;
         if (options.connected) {
@@ -603,16 +603,16 @@ define(function(require) {
           // Record connection.
           this._recordConnection('set', options.address);
         } else {
-          // If there is no profile connected, 
+          // If there is no profile connected,
           // we have to remove the record connection.
           // And fire 'disconnected' event for outer modules.
           if (!this._hasConnectedProfileByAddress(
               dataToCheckConnectedProfile)) {
-            // Record connection. Only remove the record while Bluetooth state 
-            // is enabled. Because the event also comes while Bluetooth is 
+            // Record connection. Only remove the record while Bluetooth state
+            // is enabled. Because the event also comes while Bluetooth is
             // turned off.
             if (this._defaultAdapter.state === 'enabled') {
-              this._recordConnection('remove');  
+              this._recordConnection('remove');
             }
             // Fire 'disconnected' event.
             event = {
@@ -641,7 +641,7 @@ define(function(require) {
         };
         this._emitEvent(event);
       }, (reason) => {
-        Debug('_updateConnectionStatus(): miss to update in rejected case, ' + 
+        Debug('_updateConnectionStatus(): miss to update in rejected case, ' +
               'reason = ' + reason);
       });
     },
@@ -671,27 +671,27 @@ define(function(require) {
         for (var address in connectedDevicesInfo) {
           if (connectedDevicesInfo[address].device !== null) {
             connectedDevices.push(connectedDevicesInfo[address].device);
-            Debug('connect(): push device cache in queue = ' + 
+            Debug('connect(): push device cache in queue = ' +
                   JSON.stringify(connectedDevices));
           } else {
             var regetPairedDevice = this._getPairedDeviceByAddress(address);
             connectedDevices.push(regetPairedDevice);
-            Debug('connect(): push _getPairedDeviceByAddress in queue = ' + 
+            Debug('connect(): push _getPairedDeviceByAddress in queue = ' +
                   JSON.stringify(regetPairedDevice));
           }
         }
 
-        Debug('connect(): Will disconnect these connected devices = ' + 
+        Debug('connect(): Will disconnect these connected devices = ' +
               JSON.stringify(connectedDevices));
 
-        // Disconnect these connected device before 
+        // Disconnect these connected device before
         // service to connect with new device.
         return Promise.all(connectedDevices.map((connectedDevice) => {
           return this.disconnect(connectedDevice);
         })).then(() => {
-          // All connected devices is disconnected. 
+          // All connected devices is disconnected.
           // We can start to connect the new request.
-          Debug('connect(): Start to connect with wanted device address = ' + 
+          Debug('connect(): Start to connect with wanted device address = ' +
                 device.address);
           return this._connect(device).then(() => {
             Debug('connect(): Resolved');
@@ -729,16 +729,16 @@ define(function(require) {
       Debug('_connect(): before start to connect, stop discovery first');
 
       // Note on Bluedroid stack, discovery has to be stopped before connect
-      // (i.e., call stopDiscovery() before connect()) 
+      // (i.e., call stopDiscovery() before connect())
       // otherwise stack callbacks with connect failure.
       return this._defaultAdapter.stopDiscovery().then(() => {
-        Debug('_connect(): start connecting device, ' + 
+        Debug('_connect(): start connecting device, ' +
               'address = ' + device.address);
         return this._defaultAdapter.connect(device).then(() => {
-          Debug('_connect(): resolve, already connected with address = ' + 
+          Debug('_connect(): resolve, already connected with address = ' +
                 device.address);
         }, () => {
-          // No available profiles are connected. Reset connecting address. 
+          // No available profiles are connected. Reset connecting address.
           this.connectingAddress = null;
           // Fire 'disconnected' event.
           event = {
@@ -752,7 +752,7 @@ define(function(require) {
           return Promise.reject('connection failed');
         });
       }, () => {
-        // Cannot connect with the device since stopDiscovery failed. 
+        // Cannot connect with the device since stopDiscovery failed.
         this.connectingAddress = null;
         // Fire 'disconnected' event.
         event = {
@@ -789,7 +789,7 @@ define(function(require) {
     },
 
     /**
-     * The method will get all connected devices profiles 
+     * The method will get all connected devices profiles
      * which we are interested in. Profile: HFP, A2DP.
      *
      * @access private
@@ -797,7 +797,7 @@ define(function(require) {
      * @returns {Promise} resolve: connectedDevices
      * @returns {Promise} reject: reason
      */
-    _getConnectedDevicesFromPlatform: 
+    _getConnectedDevicesFromPlatform:
     function btcm__getConnectedDevicesFromPlatform() {
       // Get connected device via profiles HFP, A2DP
       return Promise.all(Object.keys(this.Profiles).map((profile) => {
@@ -808,8 +808,8 @@ define(function(require) {
         Object.keys(this.Profiles).forEach((profile, index) => {
           collectedConnectedDevicesByProfile[profile] = connectedDevices[index];
         });
-        Debug('_getConnectedDevicesFromPlatform(): ' + 
-              'collectedConnectedDevicesByProfile = ' + 
+        Debug('_getConnectedDevicesFromPlatform(): ' +
+              'collectedConnectedDevicesByProfile = ' +
               JSON.stringify(collectedConnectedDevicesByProfile));
         return Promise.resolve(collectedConnectedDevicesByProfile);
       });
@@ -824,7 +824,7 @@ define(function(require) {
      * @returns {Promise} resolve: the connected devices in array
      * @returns {Promise} reject: reason
      */
-    _getConnectedDevicesByProfile: 
+    _getConnectedDevicesByProfile:
     function btcm__getConnectedDevicesByProfile(profileID) {
       if (!this._defaultAdapter) {
         Debug('_getConnectedDevicesByProfile(): reject with no adapter');
@@ -832,18 +832,18 @@ define(function(require) {
       }
 
       if (this._defaultAdapter.state === 'disabled') {
-        Debug('_getConnectedDevicesByProfile(): resolve with empty array ' + 
+        Debug('_getConnectedDevicesByProfile(): resolve with empty array ' +
               'since it is impossible to connect with any device');
         return Promise.reject('getConnectedDevices in disabled state');
       }
 
       return this._defaultAdapter.getConnectedDevices(profileID).then(
       (connectedDevice) => {
-        Debug('_getConnectedDevicesByProfile(): resolved with ' + 
+        Debug('_getConnectedDevicesByProfile(): resolved with ' +
               'connectedDevice = ' + JSON.stringify(connectedDevice));
         return Promise.resolve(connectedDevice || []);
       }, (reason) => {
-        Debug('_getConnectedDevicesByProfile(): rejected with ' + 
+        Debug('_getConnectedDevicesByProfile(): rejected with ' +
               'reason = ' + reason);
         return Promise.reject(reason);
       });
@@ -856,7 +856,7 @@ define(function(require) {
      * @memberOf BluetoothConnectionManager
      * @param {String} address
      */
-    _getPairedDeviceByAddress: 
+    _getPairedDeviceByAddress:
     function btcm__getPairedDeviceByAddress(address) {
       if (!this._defaultAdapter) {
         return null;
@@ -884,7 +884,7 @@ define(function(require) {
      * @param {String} options.connectedDevices - connected devices info
      * @param {String} options.address - the address of device
      */
-    _hasConnectedProfileByAddress: 
+    _hasConnectedProfileByAddress:
     function btcm__hasConnectedProfileByAddress(options) {
       if (!options.connectedDevices[options.address]) {
         return false;
@@ -892,7 +892,7 @@ define(function(require) {
 
       var hasConnectedProfile = false;
       for (var profileID in this.Profiles) {
-        var connectedProfiles = 
+        var connectedProfiles =
           options.connectedDevices[options.address].connectedProfiles;
         if (connectedProfiles && (connectedProfiles[profileID] === true)) {
           hasConnectedProfile = true;
@@ -937,7 +937,7 @@ define(function(require) {
      * @param {String} eventName
      * @param {Function} callback
      */
-    removeEventListener: 
+    removeEventListener:
     function btcm_removeEventListener(eventName, callback) {
       if (callback && (this._listeners.hasOwnProperty(eventName))) {
         var index = this._listeners[eventName].indexOf(callback);

@@ -114,7 +114,7 @@ define(function(require) {
 
     /**
      * Observe 'paired', 'connectionStatus', and 'profiles' properties changed
-     * event in init function. Once these properties changed, we can update 
+     * event in init function. Once these properties changed, we can update
      * corrected description for the device.
      */
     observableBluetoothDevice._init = function btd__init() {

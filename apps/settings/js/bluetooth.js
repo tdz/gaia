@@ -107,7 +107,7 @@
           length: MAX_DEVICE_NAME_LENGTH
         }).then((value) => {
           var wantToRetry = window.confirm(value);
-        
+
           if (!wantToRetry) {
             updateNameDialog.hidden = true;
           }
