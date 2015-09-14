@@ -215,6 +215,7 @@ suite('BluetoothContext', function() {
       mockConnectedDevices = {
         'hfp': [{address: 'AA:BB:CC:00:11:22'}],
         'a2dp': [{address: 'AA:BB:CC:00:11:22'}]
+        'avrcp': [{address: 'AA:BB:CC:00:11:22'}]
       };
 
       expectedConectionDeviceInfo = {
@@ -243,7 +244,8 @@ suite('BluetoothContext', function() {
             'device': {},
             'connectedProfiles': {
               'hfp': false,
-              'a2dp': true
+              'a2dp': true,
+              'avrcp': true
             }
           }
         };

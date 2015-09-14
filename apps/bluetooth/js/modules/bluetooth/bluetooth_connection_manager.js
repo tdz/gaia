@@ -35,7 +35,8 @@ define(function(require) {
      */
     Profiles: {
       'hfp': 0x111E,  // Handsfree
-      'a2dp': 0x110D  // Advanced Audio Distribution Devices
+      'a2dp': 0x110D,  // Advanced Audio Distribution Devices
+      'avrcp': 0x110E  // AVRCP devices
     },
 
     /**
@@ -59,7 +60,8 @@ define(function(require) {
      *     'device': DeviceObject,
      *     'connectedProfiles': {
      *       'hfp': true,
-     *       'a2dp': false
+     *       'a2dp': false,
+     *       'avrcp': false
      *     }
      *   }
      * };
@@ -414,8 +416,9 @@ define(function(require) {
     },
 
     /**
-     * Watch every of profile events('onhfpstatuschanged','ona2dpstatuschanged')
-     * from default adapter for updating device connected status immediately.
+     * Watch every of profile events('onhfpstatuschanged','ona2dpstatuschanged',
+     * 'onavrcpstatuschanged') from default adapter for updating device connected
+     * status immediately.
      *
      * Description of 'onhfpstatuschanged' event:
      * Specifies an event listener to receive hfpstatuschanged events.
@@ -424,6 +427,10 @@ define(function(require) {
      * Description of 'ona2dpstatuschanged' event:
      * Specifies an event listener to receive a2dpstatuschanged events.
      * Those events occur when an A2DP connection status changes.
+     *
+     * Description of 'onavrcpstatuschanged' event:
+     * Specifies an event listener to receive avrcpstatuschanged events.
+     * Those events occur when an AVRCP connection status changes.
      *
      * @access private
      * @memberOf BluetoothConnectionManager
@@ -441,7 +448,8 @@ define(function(require) {
 
     /**
      * Unwatch every of profile events('onhfpstatuschanged',
-     * 'ona2dpstatuschanged') from default adapter since adapter is removed.
+     * 'ona2dpstatuschanged', 'onavrcpstatuschanged') from default
+     * adapter since adapter is removed.
      *
      * @access private
      * @memberOf BluetoothConnectionManager
@@ -457,8 +465,9 @@ define(function(require) {
     },
 
     /**
-     * 'onhfpstatuschanged', 'ona2dpstatuschanged' events handler from
-     * default adapter for updating device connected status.
+     * 'onhfpstatuschanged', 'ona2dpstatuschanged', 'onavrcpstatuschanged'
+     * events handler from default adapter for updating device connected
+     * status.
      *
      * @access private
      * @memberOf BluetoothConnectionManager
@@ -790,7 +799,7 @@ define(function(require) {
 
     /**
      * The method will get all connected devices profiles
-     * which we are interested in. Profile: HFP, A2DP.
+     * which we are interested in. Profile: HFP, A2DP, AVRCP.
      *
      * @access private
      * @memberOf BluetoothConnectionManager
@@ -799,7 +808,7 @@ define(function(require) {
      */
     _getConnectedDevicesFromPlatform:
     function btcm__getConnectedDevicesFromPlatform() {
-      // Get connected device via profiles HFP, A2DP
+      // Get connected device via profiles HFP, A2DP, AVRCP
       return Promise.all(Object.keys(this.Profiles).map((profile) => {
         return this._getConnectedDevicesByProfile(this.Profiles[profile]);
       })).then((connectedDevices) => {

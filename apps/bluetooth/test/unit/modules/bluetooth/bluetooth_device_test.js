@@ -73,7 +73,8 @@ suite('BluetoothDevice', function() {
           connectionStatus: 'connected',
           profiles: {
             'hfp': true,
-            'a2dp': false
+            'a2dp': false,
+            'avrcp': false
           }
         };
       });
@@ -119,7 +120,8 @@ suite('BluetoothDevice', function() {
         setup(function() {
           newProfiles = {
             'hfp': true,
-            'a2dp': true
+            'a2dp': true,
+            'avrcp': true
           };
           expectedDescriptionText = 'connectedWithDeviceMedia';
           bluetoothDeviceCreated.paired = true;

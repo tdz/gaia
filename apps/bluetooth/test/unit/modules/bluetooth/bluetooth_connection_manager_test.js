@@ -214,7 +214,8 @@ suite('BluetoothContext', function() {
     setup(function() {
       mockConnectedDevices = {
         'hfp': [{address: 'AA:BB:CC:00:11:22'}],
-        'a2dp': [{address: 'AA:BB:CC:00:11:22'}]
+        'a2dp': [{address: 'AA:BB:CC:00:11:22'}],
+        'avrcp': [{address: 'AA:BB:CC:00:11:22'}]
       };
 
       expectedConectionDeviceInfo = {
@@ -243,7 +244,8 @@ suite('BluetoothContext', function() {
             'device': {},
             'connectedProfiles': {
               'hfp': false,
-              'a2dp': true
+              'a2dp': true,
+              'avrcp': true
             }
           }
         };
@@ -296,7 +298,8 @@ suite('BluetoothContext', function() {
             'device': {},
             'connectedProfiles': {
               'hfp': true,
-              'a2dp': false
+              'a2dp': false,
+              'avrcp': false
             }
           }
         };
@@ -469,6 +472,7 @@ suite('BluetoothContext', function() {
       connectionManager._watchProfilesStatuschanged(mockAdapter);
       assert.isDefined(mockAdapter.onhfpstatuschanged);
       assert.isDefined(mockAdapter.ona2dpstatuschanged);
+      assert.isDefined(mockAdapter.onavrcpstatuschanged);
     });
   });
 
@@ -477,7 +481,8 @@ suite('BluetoothContext', function() {
     setup(function() {
       mockAdapter = {
         onhfpstatuschanged: function() {},
-        ona2dpstatuschanged: function() {}
+        ona2dpstatuschanged: function() {},
+        onavrcpstatuschanged: function() {}
       };
     });
 
@@ -485,6 +490,7 @@ suite('BluetoothContext', function() {
       connectionManager._unwatchProfilesStatuschanged(mockAdapter);
       assert.isNull(mockAdapter.onhfpstatuschanged);
       assert.isNull(mockAdapter.ona2dpstatuschanged);
+      assert.isNull(mockAdapter.onavrcpstatuschanged);
     });
   });
 

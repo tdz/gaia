@@ -6,7 +6,8 @@
   // Service ID for profiles
   var Profiles = {
     'HFP': 0x111E,
-    'A2DP': 0x110D
+    'A2DP': 0x110D,
+    'AVRCP': 0x110E
   };
 
   var settings = Settings.mozSettings;
@@ -416,6 +417,10 @@
         showDeviceConnected(evt.address, evt.status, Profiles.A2DP);
       };
 
+      defaultAdapter.onavrcpstatuschanged = function bt_avrcpStatusChanged(evt) {
+        showDeviceConnected(evt.address, evt.status, Profiles.AVRCP);
+      };
+
       // Get paired device
       getPairedDevice(function() {
         for (var address in pairList.index) {
@@ -567,13 +572,16 @@
         updateDeviceItemsMap(Profiles.HFP, hfpResult);
         getConnectedDevicesByProfile(Profiles.A2DP, function(a2dpResult) {
           updateDeviceItemsMap(Profiles.A2DP, a2dpResult);
+          getConnectedDevicesByProfile(Profiles.A2DP, function(a2dpResult) {
+            updateDeviceItemsMap(Profiles.A2DP, a2dpResult);
 
-          var connectedDeviceItems = [];
-          for (var i in connectedDeviceItemsMap) {
-            var item = connectedDeviceItemsMap[i];
-            connectedDeviceItems.push(item);
-          }
-          callback(connectedDeviceItems);
+            var connectedDeviceItems = [];
+            for (var i in connectedDeviceItemsMap) {
+              var item = connectedDeviceItemsMap[i];
+              connectedDeviceItems.push(item);
+            }
+            callback(connectedDeviceItems);
+          });
         });
       });
     }
@@ -814,11 +822,14 @@
       var l10nId = '';
       var hfpConnected = deviceItem.connectedProfiles[Profiles.HFP];
       var a2dpConnected = deviceItem.connectedProfiles[Profiles.A2DP];
+      var avrcpConnected = deviceItem.connectedProfiles[Profiles.AVRCP];
       if (hfpConnected && a2dpConnected) {
         l10nId = 'device-status-connected-device-media';
       } else if (hfpConnected) {
         l10nId = 'device-status-connected-device';
       } else if (a2dpConnected) {
+        l10nId = 'device-status-connected-media';
+      } else if (avrcpConnected) {
         l10nId = 'device-status-connected-media';
       } else {
         l10nId = null;

@@ -70,11 +70,14 @@ define(function(require) {
         if (this.profiles) {
           var hfpConnected = this.profiles.hfp;
           var a2dpConnected = this.profiles.a2dp;
+          var avrcpConnected = this.profiles.avrcp;
           if (hfpConnected && a2dpConnected) {
             this.descriptionText = 'connectedWithDeviceMedia';
           } else if (hfpConnected) {
             this.descriptionText = 'connectedWithDevice';
           } else if (a2dpConnected) {
+            this.descriptionText = 'connectedWithMedia';
+          } else if (avrcpConnected) {
             this.descriptionText = 'connectedWithMedia';
           } else {
             this.descriptionText = 'connectedWithNoProfileInfo';

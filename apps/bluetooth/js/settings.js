@@ -5,7 +5,8 @@ navigator.mozL10n.once(function bluetoothSettings() {
   // Service ID for profiles
   var Profiles = {
     'HFP': 0x111E,
-    'A2DP': 0x110D
+    'A2DP': 0x110D,
+    'AVRCP': 0x110E
   };
 
   var _ = navigator.mozL10n.get;
@@ -424,6 +425,10 @@ navigator.mozL10n.once(function bluetoothSettings() {
         showDeviceConnected(evt.address, evt.status, Profiles.A2DP);
       };
 
+      defaultAdapter.onavrcpstatuschanged = function bt_avrcpStatusChanged(evt) {
+        showDeviceConnected(evt.address, evt.status, Profiles.AVRCP);
+      };
+
       // Get paired device
       getPairedDevice(function() {
         for (var address in pairList.index) {
@@ -565,13 +570,16 @@ navigator.mozL10n.once(function bluetoothSettings() {
         updateDeviceItemsMap(Profiles.HFP, hfpResult);
         getConnectedDevicesByProfile(Profiles.A2DP, function(a2dpResult) {
           updateDeviceItemsMap(Profiles.A2DP, a2dpResult);
+          getConnectedDevicesByProfile(Profiles.AVRCP, function(avrcpResult) {
+            updateDeviceItemsMap(Profiles.AVRCP, avrcpResult);
 
-          var connectedDeviceItems = [];
-          for (var i in connectedDeviceItemsMap) {
-            var item = connectedDeviceItemsMap[i];
-            connectedDeviceItems.push(item);
-          }
-          callback(connectedDeviceItems);
+            var connectedDeviceItems = [];
+            for (var i in connectedDeviceItemsMap) {
+              var item = connectedDeviceItemsMap[i];
+              connectedDeviceItems.push(item);
+            }
+            callback(connectedDeviceItems);
+          });
         });
       });
     }
@@ -784,11 +792,14 @@ navigator.mozL10n.once(function bluetoothSettings() {
       var l10nId = '';
       var hfpConnected = deviceItem.connectedProfiles[Profiles.HFP];
       var a2dpConnected = deviceItem.connectedProfiles[Profiles.A2DP];
+      var avrcpConnected = deviceItem.connectedProfiles[Profiles.AVRCP];
       if (hfpConnected && a2dpConnected) {
         l10nId = 'device-status-connected-phone-media';
       } else if (hfpConnected) {
         l10nId = 'device-status-connected-phone';
       } else if (a2dpConnected) {
+        l10nId = 'device-status-connected-media';
+      } else if (avrcpConnected) {
         l10nId = 'device-status-connected-media';
       } else {
         l10nId = null;
